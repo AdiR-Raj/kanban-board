@@ -3,9 +3,7 @@ package com.aditya.kanban.controller;
 import com.aditya.kanban.dto.CardCreateDTO;
 import com.aditya.kanban.dto.CardResponseDTO;
 import com.aditya.kanban.model.Card;
-import com.aditya.kanban.model.BoardColumn;
-import com.aditya.kanban.repository.CardRepository;
-import com.aditya.kanban.repository.BoardColumnRepository;
+import com.aditya.kanban.service.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,30 +14,18 @@ import java.util.List;
 public class CardController {
 
     @Autowired
-    private CardRepository cardRepository;
-
-    @Autowired
-    private BoardColumnRepository boardColumnRepository;
+    private CardService cardService;
 
     @PostMapping
     public CardResponseDTO createCard(@RequestBody CardCreateDTO dto) {
-        BoardColumn column = boardColumnRepository.findById(dto.getColumnId())
-                .orElseThrow(() -> new RuntimeException("Column not found: " + dto.getColumnId()));
+        Card card = cardService.createCard(dto.getTitle(), dto.getDescription(), dto.getPosition(), dto.getColumnId());
 
-        Card card = new Card();
-        card.setTitle(dto.getTitle());
-        card.setDescription(dto.getDescription());
-        card.setPosition(dto.getPosition());
-        card.setColumn(column);
-
-        Card saved = cardRepository.save(card);
-
-        return new CardResponseDTO(saved.getId(), saved.getTitle(), saved.getDescription(), saved.getPosition(), saved.getColumn().getId());
+        return new CardResponseDTO(card.getId(), card.getTitle(), card.getDescription(), card.getPosition(), card.getColumn().getId());
     }
 
     @GetMapping
     public List<CardResponseDTO> getAllCards() {
-        return cardRepository.findAll()
+        return cardService.getAllCards()
                 .stream()
                 .map(c -> new CardResponseDTO(c.getId(), c.getTitle(), c.getDescription(), c.getPosition(), c.getColumn().getId()))
                 .toList();
