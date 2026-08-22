@@ -34,13 +34,21 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         String token = authHeader.substring(7);
-        String username = jwtUtil.extractUsername(token);
 
-        if (username != null && jwtUtil.isTokenValid(token, username)) {
-            UsernamePasswordAuthenticationToken authToken =
-                    new UsernamePasswordAuthenticationToken(username, null, null);
+        try {
+            String username = jwtUtil.extractUsername(token);
 
-            SecurityContextHolder.getContext().setAuthentication(authToken);
+            if (username != null && jwtUtil.isTokenValid(token, username)) {
+                UsernamePasswordAuthenticationToken authToken =
+                        new UsernamePasswordAuthenticationToken(username, null, null);
+
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            }
+        } catch (Exception e) {
+            // Malformed, expired, or tampered token — leave request unauthenticated
+            // and let SecurityConfig's authorizeHttpRequests rules reject it with 403
+            // hello ji kaise ho khana khake jaana haan? (easter egg)
+            SecurityContextHolder.clearContext();
         }
 
         filterChain.doFilter(request, response);
