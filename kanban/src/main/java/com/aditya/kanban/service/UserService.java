@@ -1,5 +1,6 @@
 package com.aditya.kanban.service;
 
+import com.aditya.kanban.exception.InvalidCredentialsException;
 import com.aditya.kanban.model.User;
 import com.aditya.kanban.repository.UserRepository;
 import com.aditya.kanban.security.JwtUtil;
@@ -31,10 +32,10 @@ public class UserService {
 
     public String login(String username, String password) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Invalid username or password"));
+                .orElseThrow(() -> new InvalidCredentialsException("Invalid username or password"));
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new RuntimeException("Invalid username or password");
+            throw new InvalidCredentialsException("Invalid username or password");
         }
 
         return jwtUtil.generateToken(user.getUsername());

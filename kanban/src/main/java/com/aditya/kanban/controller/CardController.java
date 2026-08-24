@@ -4,6 +4,7 @@ import com.aditya.kanban.dto.CardCreateDTO;
 import com.aditya.kanban.dto.CardResponseDTO;
 import com.aditya.kanban.model.Card;
 import com.aditya.kanban.service.CardService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +18,7 @@ public class CardController {
     private CardService cardService;
 
     @PostMapping
-    public CardResponseDTO createCard(@RequestBody CardCreateDTO dto) {
+    public CardResponseDTO createCard(@Valid @RequestBody CardCreateDTO dto) {
         Card card = cardService.createCard(dto.getTitle(), dto.getDescription(), dto.getPosition(), dto.getColumnId());
 
         return new CardResponseDTO(card.getId(), card.getTitle(), card.getDescription(), card.getPosition(), card.getColumn().getId());

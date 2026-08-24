@@ -1,5 +1,6 @@
 package com.aditya.kanban.service;
 
+import com.aditya.kanban.exception.ResourceNotFoundException;
 import com.aditya.kanban.model.Card;
 import com.aditya.kanban.model.BoardColumn;
 import com.aditya.kanban.repository.CardRepository;
@@ -20,7 +21,7 @@ public class CardService {
 
     public Card createCard(String title, String description, Integer position, Long columnId) {
         BoardColumn column = boardColumnRepository.findById(columnId)
-                .orElseThrow(() -> new RuntimeException("column not found with id : " + columnId));
+                .orElseThrow(() -> new ResourceNotFoundException("column not found with id : " + columnId));
 
         Card card = new Card();
         card.setTitle(title);
