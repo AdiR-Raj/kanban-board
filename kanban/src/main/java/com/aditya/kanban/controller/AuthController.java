@@ -3,6 +3,7 @@ package com.aditya.kanban.controller;
 import com.aditya.kanban.dto.LoginRequestDTO;
 import com.aditya.kanban.dto.LoginResponseDTO;
 import com.aditya.kanban.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +15,7 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/login")
-    public LoginResponseDTO login(@RequestBody LoginRequestDTO dto) {
+    public LoginResponseDTO login(@Valid @RequestBody LoginRequestDTO dto) {
         String token = userService.login(dto.getUsername(), dto.getPassword());
         return new LoginResponseDTO(token);
     }

@@ -1,5 +1,6 @@
 package com.aditya.kanban.service;
 
+import com.aditya.kanban.exception.ResourceNotFoundException;
 import com.aditya.kanban.model.Board;
 import com.aditya.kanban.model.User;
 import com.aditya.kanban.repository.BoardRepository;
@@ -19,7 +20,7 @@ public class BoardService {
 
     public Board createBoard(String name, Long ownerId) {
         User owner = userRepository.findById(ownerId)
-                .orElseThrow(() -> new RuntimeException(("user not found with id: " + ownerId)));
+                .orElseThrow(() -> new ResourceNotFoundException(("user not found with id: " + ownerId)));
 
         Board board = new Board();
         board.setName(name);

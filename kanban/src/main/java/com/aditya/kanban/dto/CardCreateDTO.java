@@ -1,9 +1,19 @@
 package com.aditya.kanban.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class CardCreateDTO {
+
+    @NotBlank(message = "Title is required")
     private String title;
+
     private String description;
+
+    @NotNull(message = "Position is required")
     private Integer position;
+
+    @NotNull(message = "Column ID is required")
     private Long columnId;
 
     public String getTitle() { return title; }

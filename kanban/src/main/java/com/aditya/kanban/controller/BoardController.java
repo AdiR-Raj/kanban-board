@@ -2,6 +2,7 @@ package com.aditya.kanban.controller;
 
 import com.aditya.kanban.dto.BoardCreateDTO;
 import com.aditya.kanban.dto.BoardResponseDTO;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.aditya.kanban.service.BoardService;
@@ -17,7 +18,7 @@ public class BoardController {
     private BoardService boardService;
 
     @PostMapping
-    public BoardResponseDTO createBoard(@RequestBody BoardCreateDTO dto) {
+    public BoardResponseDTO createBoard(@Valid @RequestBody BoardCreateDTO dto) {
         Board saved = boardService.createBoard(dto.getName(), dto.getOwnerId());
         return new BoardResponseDTO(saved.getId(), saved.getName(), saved.getOwner().getId());
     }
