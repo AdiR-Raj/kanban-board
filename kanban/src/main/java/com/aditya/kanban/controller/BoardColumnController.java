@@ -1,6 +1,7 @@
 package com.aditya.kanban.controller;
 
 import com.aditya.kanban.dto.BoardColumnCreateDTO;
+import com.aditya.kanban.dto.BoardColumnRenameDTO;
 import com.aditya.kanban.dto.BoardColumnResponseDTO;
 import com.aditya.kanban.model.BoardColumn;
 import com.aditya.kanban.service.BoardColumnService;
@@ -30,5 +31,16 @@ public class BoardColumnController {
                 .stream()
                 .map(c -> new BoardColumnResponseDTO(c.getId(), c.getName(), c.getPosition(), c.getBoard().getId()))
                 .toList();
+    }
+
+    @PatchMapping("/{id}/rename")
+    public BoardColumnResponseDTO renameColumn(@PathVariable Long id, @Valid @RequestBody BoardColumnRenameDTO dto) {
+        BoardColumn boardColumn = boardColumnService.renameColumn(id, dto.getName());
+        return new BoardColumnResponseDTO(boardColumn.getId(), boardColumn.getName(), boardColumn.getPosition(), boardColumn.getBoard().getId());
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteColumn(@PathVariable Long id) {
+        boardColumnService.deleteColumn(id);
     }
 }
